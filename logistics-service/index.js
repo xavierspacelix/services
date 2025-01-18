@@ -1,0 +1,15 @@
+const express = require('express');
+const dotenv = require('dotenv');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs'); 
+const connectDB = require('./config/db');
+const shipmentRoutes = require('./routes/shipmentRoutes');
+dotenv.config();
+connectDB();
+const app = express();
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(express.json());
+app.use('/api/shipments', shipmentRoutes);
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`Logistics service running on port ${PORT}`));
